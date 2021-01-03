@@ -10,7 +10,7 @@ export class CRUDGenerator {
     this.CRUDGeneratorStrategy = CRUDGeneratorStrategy;
     this.model = model;
   }
-  public generate() {
-    return this.CRUDGeneratorStrategy.makeRest(this.porjectDBPath, this.model);
+  public generate(dbInstance: any) {
+    return this.CRUDGeneratorStrategy.makeRest(dbInstance, this.porjectDBPath, this.model);
   }
 }

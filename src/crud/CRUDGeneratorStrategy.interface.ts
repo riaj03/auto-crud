@@ -1,5 +1,5 @@
 import { ModelConfig } from '../strategies/modelConfig.types';
 
 export interface CRUDGeneratorStrategy {
-  makeRest: (porjectDBPath: string, model: ModelConfig) => {};
+  makeRest: (dbInstance: any, porjectDBPath: string, model: ModelConfig) => {};
 }

@@ -2,20 +2,12 @@ import { CRUDGeneratorStrategy } from '../../crud/CRUDGeneratorStrategy.interfac
 import { readFileSync, writeFile } from 'fs';
 import { ModelConfig } from '../../strategies/modelConfig.types';
 import { sequelizeDbModel } from '../snipets/typeScriptSnipets/sequelizeDbModelSnipets';
-const isWin = process.platform === 'win32';
 import { plural } from 'pluralize';
+import { TypescriptServiceModel } from './typescriptServiceModel';
+import { lowerCaseFirstLetter, fileRead } from '../../services/commonServices';
 
 export class TypescriptCrudStrategy implements CRUDGeneratorStrategy {
   private porjectDBPath!: string;
-  private readFile(file: string) {
-    let content = readFileSync(file, 'utf8');
-    if (isWin) content = content.replace(/\r/g, '');
-    return content;
-  }
-
-  private lowerCaseFirstLetter(str: string) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
 
   private addModelAssociations(file: string, model: ModelConfig) {
     // REPLACE `// associations can be defined here`
@@ -40,7 +32,7 @@ export class TypescriptCrudStrategy implements CRUDGeneratorStrategy {
                 ? association['foreignkey']
                 : model.name.charAt(0).toLowerCase() + model.name.substring(1) + 'Id';
             let sourceKey = 'sourcekey' in association ? association['sourcekey'] : 'id';
-            let as = 'as' in association ? association?.as : this.lowerCaseFirstLetter(association['associated_model']);
+            let as = 'as' in association ? association?.as : lowerCaseFirstLetter(association['associated_model']);
             associationsCode += `${model.name}.hasOne(models.${ascModel}, {foreignKey: '${foreignKey}', sourceKey: '${sourceKey}', as: '${as}'});
     `;
           }
@@ -55,8 +47,7 @@ export class TypescriptCrudStrategy implements CRUDGeneratorStrategy {
                 ? association['foreignkey']
                 : model.name.charAt(0).toLowerCase() + model.name.substring(1) + 'Id';
             let sourceKey = 'sourcekey' in association ? association['sourcekey'] : 'id';
-            let as =
-              'as' in association ? association.as : this.lowerCaseFirstLetter(association['associated_model']) + 's';
+            let as = 'as' in association ? association.as : lowerCaseFirstLetter(association['associated_model']) + 's';
             associationsCode += `${model.name}.hasMany(models.${ascModel}, {foreignKey: '${foreignKey}', sourceKey: '${sourceKey}', as: '${as}'});
     `;
           }
@@ -144,14 +135,18 @@ export class TypescriptCrudStrategy implements CRUDGeneratorStrategy {
     });
   }
 
-  private makeServiceModel(snipet: any): any {}
+  private makeServiceModel(dbInstance: any, model: ModelConfig): any {
+    const serviceModel = new TypescriptServiceModel(model, model.model_dir_name);
+    serviceModel.constructModelClass(dbInstance, this.porjectDBPath);
+  }
+
   private makeController(snipet: any): any {}
   private makeRoute(snipet: any): any {}
 
-  public makeRest(porjectDBPath: string, model: ModelConfig): any {
+  public makeRest(dbInstance: any, porjectDBPath: string, model: ModelConfig): any {
     this.porjectDBPath = porjectDBPath;
-    let dbModelContents = this.readFile(`${porjectDBPath}/models/${model.name.toLowerCase()}.js`);
+    let dbModelContents = fileRead(`${porjectDBPath}/models/${model.name.toLowerCase()}.js`);
     this.updateDbModel(dbModelContents, model);
-    this.makeServiceModel();
+    this.makeServiceModel(dbInstance, model);
   }
 }

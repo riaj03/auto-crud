@@ -40,12 +40,15 @@ class Rest {
 
       // crud generate
       this.crudGeneratorStrategy(model);
-      this.crud.generate();
+      this.crud.generate(this.dbInstance);
     });
   }
 
   public generate(models: ModelConfig[]) {
     this.createRest(models);
+  }
+  public db() {
+    return this.dbInstance;
   }
 }
 
@@ -62,7 +65,7 @@ const dbConnection = new DatabaseConnection('sql').connect(clientDbConfig);
 const projectDbPath = '/home/riajul/Documents/groots/otusuki-dental/od-backend/src/db/';
 
 const rest = new Rest('sql', dbConnection, projectDbPath, 'typescript');
-const models = [
+const models: ModelConfig[] = [
   {
     name: 'User',
     attributes: [

@@ -44,6 +44,7 @@
   },
   "dependencies": {
     "@types/pluralize": "0.0.29",
+    "js-beautify": "^1.13.0",
     "mysql2": "^2.2.5",
     "pluralize": "^8.0.0",
     "sequelize": "^6.3.5"

@@ -13,8 +13,12 @@ export type ModelConfig = {
   name: string;
   attributes: ModelAttributes[];
   associations?: ModelAssociation[];
+  model_dir_name: string;
+  routes: any[];
+  controller_dir_name: string;
+  routes_dir_name: string;
 };
 
-for (let index = 0; index < array.length; index++) {
-  const element = array[index];
-}
+export type ServiceModelMethod = {
+  [key: string]: any;
+};
