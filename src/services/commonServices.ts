@@ -12,9 +12,9 @@ export const fileRead = (file: string) => {
 };
 
 export const mkdirSyncRecursive = (directory: string) => {
-  var path = directory.replace(/\/$/, '').split('/');
-  for (var i = 1; i <= path.length; i++) {
-    var segment = path.slice(0, i).join('/');
+  const path = directory.replace(/\/$/, '').split('/');
+  for (let i = 1; i <= path.length; i++) {
+    const segment = path.slice(0, i).join('/');
     segment.length > 0 && !existsSync(segment) ? mkdirSync(segment) : null;
   }
 };

@@ -1,11 +1,14 @@
 {
-  "name": "rest-generator",
+  "name": "rest",
   "version": "1.0.0",
   "description": "Restfull API generstor with node.js and express",
   "main": "./src/index.ts",
+  "bin": {
+    "rest": "./dist/index.js"
+  },
   "scripts": {
     "tsc": "tsc",
-    "prebuild": "npm run format && npm run lint",
+    "prebuild": "npm run format",
     "build": "tsc",
     "prestart": "npm run tsc",
     "app": "node dist/index.js",

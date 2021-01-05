@@ -5,6 +5,8 @@ import { sequelizeDbModel } from '../snipets/typeScriptSnipets/sequelizeDbModelS
 import { plural } from 'pluralize';
 import { TypescriptServiceModel } from './typescriptServiceModel';
 import { lowerCaseFirstLetter, fileRead } from '../../services/commonServices';
+import { TypeScriptController } from './typescriptController';
+import { TypescriptRoutes } from './typescriptRoutes';
 
 export class TypescriptCrudStrategy implements CRUDGeneratorStrategy {
   private porjectDBPath!: string;
@@ -17,8 +19,8 @@ export class TypescriptCrudStrategy implements CRUDGeneratorStrategy {
       switch (association.method) {
         case 'belongsTo':
           {
-            let ascModel = association.associated_model;
-            let lowerAscModel =
+            const ascModel = association.associated_model;
+            const lowerAscModel =
               association.associated_model.charAt(0).toLowerCase() + association.associated_model.substring(1);
             associationsCode += `${model.name}.belongsTo(models.${ascModel}, {as: '${lowerAscModel}'});
     `;
@@ -26,13 +28,13 @@ export class TypescriptCrudStrategy implements CRUDGeneratorStrategy {
           break;
         case 'hasOne':
           {
-            let ascModel = association.associated_model;
-            let foreignKey =
+            const ascModel = association.associated_model;
+            const foreignKey =
               'foreignkey' in association
                 ? association['foreignkey']
                 : model.name.charAt(0).toLowerCase() + model.name.substring(1) + 'Id';
-            let sourceKey = 'sourcekey' in association ? association['sourcekey'] : 'id';
-            let as = 'as' in association ? association?.as : lowerCaseFirstLetter(association['associated_model']);
+            const sourceKey = 'sourcekey' in association ? association['sourcekey'] : 'id';
+            const as = 'as' in association ? association?.as : lowerCaseFirstLetter(association['associated_model']);
             associationsCode += `${model.name}.hasOne(models.${ascModel}, {foreignKey: '${foreignKey}', sourceKey: '${sourceKey}', as: '${as}'});
     `;
           }
@@ -41,13 +43,14 @@ export class TypescriptCrudStrategy implements CRUDGeneratorStrategy {
         // @{MODEL}.hasMany(models.@{ASSOCIATED_MODEL}, {foreignKey: @{FOREIGNKEY}, sourceKey: @{SOURCEKEY}, as: @{AS});
         case 'hasMany':
           {
-            let ascModel = association.associated_model;
-            let foreignKey =
+            const ascModel = association.associated_model;
+            const foreignKey =
               'foreignkey' in association
                 ? association['foreignkey']
                 : model.name.charAt(0).toLowerCase() + model.name.substring(1) + 'Id';
-            let sourceKey = 'sourcekey' in association ? association['sourcekey'] : 'id';
-            let as = 'as' in association ? association.as : lowerCaseFirstLetter(association['associated_model']) + 's';
+            const sourceKey = 'sourcekey' in association ? association['sourcekey'] : 'id';
+            const as =
+              'as' in association ? association.as : lowerCaseFirstLetter(association['associated_model']) + 's';
             associationsCode += `${model.name}.hasMany(models.${ascModel}, {foreignKey: '${foreignKey}', sourceKey: '${sourceKey}', as: '${as}'});
     `;
           }
@@ -135,18 +138,25 @@ export class TypescriptCrudStrategy implements CRUDGeneratorStrategy {
     });
   }
 
-  private makeServiceModel(dbInstance: any, model: ModelConfig): any {
+  private makeServiceModel(model: ModelConfig): any {
     const serviceModel = new TypescriptServiceModel(model, model.model_dir_name);
-    serviceModel.constructModelClass(dbInstance, this.porjectDBPath);
+    serviceModel.constructModelClass(this.porjectDBPath);
   }
 
-  private makeController(snipet: any): any {}
-  private makeRoute(snipet: any): any {}
-
-  public makeRest(dbInstance: any, porjectDBPath: string, model: ModelConfig): any {
+  private makeController(model: ModelConfig): any {
+    const controller = new TypeScriptController(model, this.porjectDBPath);
+    controller.constructController();
+  }
+  private makeRoute(model: ModelConfig): any {
+    const route = new TypescriptRoutes(this.porjectDBPath, model);
+    route.constructRoutesFile();
+  }
+  public makeRest(porjectDBPath: string, model: ModelConfig): any {
     this.porjectDBPath = porjectDBPath;
-    let dbModelContents = fileRead(`${porjectDBPath}/models/${model.name.toLowerCase()}.js`);
+    const dbModelContents = fileRead(`${porjectDBPath}/models/${model.name.toLowerCase()}.js`);
     this.updateDbModel(dbModelContents, model);
-    this.makeServiceModel(dbInstance, model);
+    this.makeServiceModel(model);
+    this.makeController(model);
+    this.makeRoute(model);
   }
 }

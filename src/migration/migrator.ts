@@ -7,7 +7,7 @@ export class Migrator {
     this.schemaMigrationStrategy = schemaMigrationStrategy;
   }
 
-  public migrate(porjectDBPath: string, dbInstance: any, model: ModelConfig): any {
-    return this.schemaMigrationStrategy.migrate(porjectDBPath, dbInstance, model);
+  public migrate(porjectDBPath: string, model: ModelConfig): any {
+    return this.schemaMigrationStrategy.migrate(porjectDBPath, model);
   }
 }

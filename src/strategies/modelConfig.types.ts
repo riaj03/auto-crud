@@ -19,6 +19,11 @@ export type ModelConfig = {
   routes_dir_name: string;
 };
 
+export type RestConfig = {
+  projectDbPath: string;
+  models: ModelConfig[];
+};
+
 export type ServiceModelMethod = {
   [key: string]: any;
 };

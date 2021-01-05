@@ -18,8 +18,8 @@ export class TypescriptServiceModel {
   }
 
   private getURLParamNames(url: string) {
-    let parts = url.split('/');
-    let params = parts.filter((part) => part.startsWith(':'));
+    const parts = url.split('/');
+    const params = parts.filter((part) => part.startsWith(':'));
     return params;
   }
 
@@ -27,18 +27,13 @@ export class TypescriptServiceModel {
     let functionsCode = '';
 
     model.routes.forEach((route) => {
-      console.log(route.method);
       // eslint-disable-next-line
       let func: string = serviceModelSnipets.functions.methods[route.method];
       // console.log(`Function for method: ${route.method}`);
-      console.log(func);
-
       switch (route['method']) {
         case 'getModel':
           {
             func = func.replace(/@{MODEL}/g, model.name);
-            console.log(func);
-
             const params = this.getURLParamNames(route['url']);
             // console.log("URL params:");
             // console.log(params);
@@ -104,12 +99,10 @@ export class TypescriptServiceModel {
     });
 
     file = file.replace('@{FUNCTIONS}', functionsCode);
-    console.log(file);
-
     return file;
   }
 
-  private createModelClassFileContents(dbInstance: any, model: ModelConfig) {
+  private createModelClassFileContents(model: ModelConfig) {
     let file = serviceModelSnipets.body;
 
     // Set required directory level ups for db and queryParser
@@ -124,19 +117,19 @@ export class TypescriptServiceModel {
     relative_qp_dir_change = dirUps + relative_qp_dir_change;
 
     // set db relative dir
-    file = file.replace('@{DB_INSTANCE}', dbInstance);
     file = file.replace('@{RELATIVE_DB_DIR_CHANGE}', relative_db_dir_change);
     // set query parser relative dir
     file = file.replace('@{RELATIVE_QP_DIR_CHANGE}', relative_qp_dir_change);
     // replace constructor function names
+    file = file.replace(/@{MODEL}/g, plural(model.name));
     file = file.replace(/@{PLEURAL_MODEL}/g, plural(model.name));
     // create model operation functions
     file = this.createModelClassFunctions(file, model);
     return file;
   }
 
-  public constructModelClass(dbInstance: any, projectDbPath: string) {
-    let file = this.createModelClassFileContents(dbInstance, this.model);
+  public constructModelClass(projectDbPath: string) {
+    const file = this.createModelClassFileContents(this.model);
     // console.log("Model Class File Content: ");
     // console.log(file);
 

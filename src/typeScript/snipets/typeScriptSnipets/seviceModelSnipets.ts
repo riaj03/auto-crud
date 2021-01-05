@@ -1,6 +1,6 @@
 export const serviceModelSnipets: any = {
   body: `
-const db = require("@{RELATIVE_DB_DIR_CHANGE}/database/models/index");
+const db = require('../../../db/models');
 const queryParser = require("@{RELATIVE_QP_DIR_CHANGE}/model/queryParser");
 export class @{PLEURAL_MODEL} {
 @{FUNCTIONS}

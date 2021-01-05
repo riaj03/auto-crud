@@ -1,10 +1,13 @@
-export const controllerSnipets: any = {
-  body: `
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.controllerSnipets = void 0;
+exports.controllerSnipets = {
+    body: `
 import {@{PLEURAL_MODEL}} from '@{RELATIVE_MODEL_DIR_CHANGE}/model/@{MODEL_DIR}/@{SMALL_PLEURAL_MODEL}';
 `,
-  functions: {
-    methods: {
-      getModel: `export const get@{MODEL} = (req: any, res: any) => {
+    functions: {
+        methods: {
+            getModel: `export const get@{MODEL} = (req: any, res: any) => {
 return (new @{PLEURAL_MODEL}()).get@{MODEL}(req)
 .then((@{SMALL_MODEL}: any) => {
   if(@{SMALL_MODEL} == null) {
@@ -29,7 +32,7 @@ return (new @{PLEURAL_MODEL}()).get@{MODEL}(req)
   })
 })
 };`,
-      getModels: `export const get@{PLEURAL_MODEL} = (req: any, res: any) => {
+            getModels: `export const get@{PLEURAL_MODEL} = (req: any, res: any) => {
 return (new @{PLEURAL_MODEL}()).get@{PLEURAL_MODEL}(req)
 .then((@{SMALL_PLEURAL_MODEL}: any) => {
   res.status(200).send({
@@ -46,7 +49,7 @@ return (new @{PLEURAL_MODEL}()).get@{PLEURAL_MODEL}(req)
   })
 })
 };`,
-      createModel: `export const create@{MODEL} = (req: any, res: any) => {
+            createModel: `export const create@{MODEL} = (req: any, res: any) => {
 return (new @{PLEURAL_MODEL}()).create@{MODEL}(req)
 .then((@{SMALL_MODEL} : any) => {
   res.status(200).send({
@@ -63,7 +66,7 @@ return (new @{PLEURAL_MODEL}()).create@{MODEL}(req)
   })
 })
 };`,
-      updateModel: `export const update@{MODEL} = (req: any, res: any) => {
+            updateModel: `export const update@{MODEL} = (req: any, res: any) => {
 return (new @{PLEURAL_MODEL}()).update@{MODEL}(req)
 .then((@{SMALL_MODEL}: any) => {
   if(@{SMALL_MODEL} == null) {
@@ -88,7 +91,7 @@ return (new @{PLEURAL_MODEL}()).update@{MODEL}(req)
   })
 })
 };`,
-      patchModel: `export const patch@{MODEL} = (req: any, res: any) => {
+            patchModel: `export const patch@{MODEL} = (req: any, res: any) => {
 return (new @{PLEURAL_MODEL}()).patch@{MODEL}(req)
 .then((@{SMALL_MODEL}: any) => {
   if(@{SMALL_MODEL} == null) {
@@ -113,7 +116,7 @@ return (new @{PLEURAL_MODEL}()).patch@{MODEL}(req)
   })
 })
 };`,
-      deleteModel: `export const delete@{MODEL} = (req: any, res: any) => {
+            deleteModel: `export const delete@{MODEL} = (req: any, res: any) => {
 return (new @{PLEURAL_MODEL}()).delete@{MODEL}(req)
 .then((deleted: boolean) => {
   if(deleted == false) {
@@ -137,6 +140,6 @@ return (new @{PLEURAL_MODEL}()).delete@{MODEL}(req)
   })
 })
 };`
+        }
     }
-  }
 };
