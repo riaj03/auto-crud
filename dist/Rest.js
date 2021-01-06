@@ -34,12 +34,12 @@ class Rest {
         });
     }
     pretifyCodes() {
-        console.log('sdfldsjfljsdfj');
         child_process_1.execSync('npm run format', { cwd: `/home/riajul/Documents/groots/otusuki-dental/od-backend` });
     }
     generate(restConfig) {
         this.createRest(restConfig.models);
-        this.pretifyCodes();
+        // TODO:: pertify all codes
+        //this.pretifyCodes();
     }
 }
 exports.Rest = Rest;

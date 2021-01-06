@@ -2,25 +2,24 @@
   "projectDbPath": "/home/riajul/Documents/groots/otusuki-dental/od-backend/src/db/",
   "models": [
     {
-      "name": "Client",
+      "name": "User",
       "attributes": [
         { "name": "firstName", "type": "string" },
         { "name": "lastName", "type": "string" },
-        { "name": "firstNameFurigana", "type": "string" },
-        { "name": "lastNameFurigana", "type": "string" },
-        { "name": "dob", "type": "date" },
+        { "name": "password", "type": "string" },
         { "name": "email", "type": "string" }
       ],
       "associations": [],
       "routes": [
-        { "url": "/api/clients", "method": "createModel" },
-        { "url": "/api/clients/:id", "method": "updateModel" },
-        { "url": "/api/clients/:id", "method": "patchModel" },
-        { "url": "/api/clients/", "method": "getModels" }
+        { "url": "/api/users", "method": "createModel" },
+        { "url": "/api/users/:id", "method": "updateModel" },
+        { "url": "/api/users/:id", "method": "patchModel" },
+        { "url": "/api/users/", "method": "getModels" },
+        { "url": "/api/users/:id", "method": "getModel" }
       ],
-      "controller_dir_name": "client",
-      "model_dir_name": "clients",
-      "routes_dir_name": "clients"
+      "controller_dir_name": "users",
+      "model_dir_name": "users",
+      "routes_dir_name": "users"
     }
   ]
 }

@@ -47,6 +47,6 @@ export class Rest {
   public generate(restConfig: RestConfig) {
     this.createRest(restConfig.models);
     // TODO:: pertify all codes
-    this.pretifyCodes();
+    //this.pretifyCodes();
   }
 }

@@ -8,7 +8,6 @@
   },
   "scripts": {
     "tsc": "tsc",
-    "prebuild": "npm run format",
     "build": "tsc",
     "prestart": "npm run tsc",
     "app": "node dist/index.js",

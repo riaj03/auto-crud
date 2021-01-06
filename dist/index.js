@@ -10,8 +10,8 @@ const execute = () => {
     const files = getFileNameArguments();
     if (files != null && files.length > 0) {
         files.forEach((file) => {
-            const dataSource = require(`../${file}`);
-            const rest = new Rest_1.Rest('sql', projectDbPath, 'typescript');
+            const dataSource = require(`${file}`);
+            const rest = new Rest_1.Rest('sql', dataSource.projectDbPath, 'typescript');
             rest.generate(dataSource);
         });
     }
