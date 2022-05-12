@@ -33,7 +33,7 @@ export const sequelizeDbModel = {
   };`
     },
     statements: {
-      assignToModel: `if (data.@{ATTRIBUTE}) model.@{ATTRIBUTE} = data.@{ATTRIBUTE}.trim();`
+      assignToModel: `if (data.@{ATTRIBUTE}) model.@{ATTRIBUTE} = data.@{ATTRIBUTE};`
     }
   }
 };

@@ -39,12 +39,12 @@ export class @{PLEURAL_MODEL} {
 };`,
       updateModel: `public async update@{MODEL}  (req: any){
   let model = await this.get@{MODEL}(req);
-  if (model == null) return Promise.resolve(null);
+  if (model === null) return Promise.resolve(null);
   return db.@{MODEL}.update@{MODEL}(model, req.body);
 };`,
       patchModel: `public async patch@{MODEL}  (req: any)  {
   let model = await this.get@{MODEL}(req);
-  if (model == null) return Promise.resolve(null);
+  if (model === null) return Promise.resolve(null);
   return db.@{MODEL}.update@{MODEL}(model, req.body);
 };`,
       deleteModel: `public delete@{MODEL}  (req: any){

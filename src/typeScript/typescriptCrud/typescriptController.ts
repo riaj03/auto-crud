@@ -21,8 +21,6 @@ export class TypeScriptController {
 
     model.routes.forEach((route) => {
       let func: any = controllerSnipets.functions.methods[route.method];
-      // console.log(`Function for method: ${route.method}`);
-      // console.log(func);
 
       switch (route.method) {
         case 'getModels':
@@ -54,7 +52,6 @@ export class TypeScriptController {
             functionsCode +=
               func +
               `
-    
 `;
           }
           break;

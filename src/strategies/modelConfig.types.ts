@@ -7,6 +7,8 @@ export type ModelAssociation = {
   method: string;
   associated_model: string;
   as: string;
+  sourcekey?: any;
+  foreignkey?: any;
 };
 
 export type ModelConfig = {

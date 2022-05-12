@@ -21,10 +21,10 @@ export class TypescriptRoutes {
       switch (obj.method) {
         case 'getModels':
           {
-            route = route.replace('@{ALL_CAP_PLEURAL_MODEL}', plural(model.name).toUpperCase());
-            route = route.replace('@{PLEURAL_MODEL}', plural(model.name));
+            route = route.replace(/@{ALL_CAP_PLEURAL_MODEL}/g, plural(model.name).toUpperCase());
+            route = route.replace(/@{PLEURAL_MODEL}/g, plural(model.name));
             route = route.replace(
-              '@{SMALL_PLEURAL_MODEL}',
+              /@{SMALL_PLEURAL_MODEL}/g,
               plural(model.name).charAt(0).toLowerCase() + plural(model.name).substring(1)
             );
 
@@ -41,10 +41,10 @@ export class TypescriptRoutes {
         case 'patchModel':
         case 'deleteModel':
           {
-            route = route.replace('@{ALL_CAP_MODEL}', model.name.toUpperCase());
-            route = route.replace('@{MODEL}', model.name);
+            route = route.replace(/@{ALL_CAP_MODEL}/g, model.name.toUpperCase());
+            route = route.replace(/@{MODEL}/g, model.name);
             route = route.replace(
-              '@{SMALL_PLEURAL_MODEL}',
+              /@{SMALL_PLEURAL_MODEL}/g,
               plural(model.name).charAt(0).toLowerCase() + plural(model.name).substring(1)
             );
             routes +=
@@ -56,7 +56,7 @@ export class TypescriptRoutes {
       }
     });
 
-    file = file.replace('@{ATTACH_ROUTES}', routes);
+    file = file.replace(/@{ATTACH_ROUTES}/g, routes);
     return file;
   }
   private routesFileDir() {
@@ -174,11 +174,11 @@ export class TypescriptRoutes {
     let routeIndexContent = fileRead(`${routeIndexFildeDir}/index.ts`);
     routeIndexContent = routeIndexContent.replace(
       '// add new route',
-      `const ${this.model.name.toLowerCase()} = require('${routeDir}');` + '\n' + `// add new route`
+      `import ${this.model.name.toLowerCase()}Router from '${routeDir}';` + '\n' + `// add new route`
     );
     routeIndexContent = routeIndexContent.replace(
       '// use new route',
-      `this.routes.use(${this.model.name.toLowerCase()});` + '\n' + `// use new route`
+      `nodeServer.use(${this.model.name.toLowerCase()});` + '\n' + `// use new route`
     );
     writeCodeFile(`${routeIndexFildeDir}/`, 'index', 'ts', routeIndexContent);
   }

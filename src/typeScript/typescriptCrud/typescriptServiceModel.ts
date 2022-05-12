@@ -39,7 +39,7 @@ export class TypescriptServiceModel {
             // console.log(params);
 
             let statements = '';
-            if (params.length > 1 || params.includes(':id') == false) {
+            if (params.length > 1 || params.includes(':id') === false) {
               statements += `${serviceModelSnipets.functions.statements.mergeParamsInQuery}
         ${serviceModelSnipets.functions.statements.getModel.replace(/@{MODEL}/g, model.name)}`;
             } else {
