@@ -149,6 +149,7 @@ export class TypescriptRoutes {
     };
 
     let urls = urlsSinpet.bodyStart.replace('@{PLURAL_MODEL_LOWER}', plural(this.model.name.toLowerCase()));
+
     for (let index = 0; index < this.model.routes.length; index++) {
       let routeUrl = urlsSinpet.url.replace('@{METHOD}', this.getMethodName(this.model.routes[index].method));
       routeUrl = routeUrl.replace(
@@ -161,6 +162,7 @@ export class TypescriptRoutes {
       routeUrl += ',';
       urls += routeUrl;
     }
+
     urlContents += urls;
     urlContents += `};`;
     writeCodeFile(`${this.projectDbPath}../routes/`, 'urls', 'ts', urlContents);

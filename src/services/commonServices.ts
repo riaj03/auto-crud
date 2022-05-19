@@ -31,3 +31,7 @@ export const writeCodeFile = (directory: string, fileName: string, estension: 'j
     console.error(err);
   }
 };
+
+export const ifExists = (directory: string) => {
+  return existsSync(directory);
+};

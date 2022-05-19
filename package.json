@@ -38,7 +38,7 @@
   "author": "riaj.csp@gmail.com",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^14.14.17",
+    "@types/node": "^14.18.18",
     "@typescript-eslint/eslint-plugin": "^4.11.1",
     "@typescript-eslint/parser": "^4.11.1",
     "eslint": "^7.16.0",

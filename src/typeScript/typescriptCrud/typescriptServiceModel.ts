@@ -11,7 +11,7 @@ export class TypescriptServiceModel {
   }
 
   private modelClassFileDir(projectDbPath: string, model: ModelConfig) {
-    let fileDir = `${projectDbPath}/../app/model/`;
+    let fileDir = `${projectDbPath}/../model/`;
     if ('model_dir_name' in model && model?.model_dir_name.length > 0) fileDir += `${model.model_dir_name}/`;
     // filePath += `${fileName}.js`
     return fileDir;

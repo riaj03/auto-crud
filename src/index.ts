@@ -3,7 +3,6 @@ import { Rest } from './Rest';
 const getFileNameArguments = () => {
   return process.argv.slice(2);
 };
-const projectDbPath = '/home/riajul/Documents/groots/otusuki-dental/od-backend/src/db/';
 const execute = () => {
   const files = getFileNameArguments();
   if (files != null && files.length > 0) {

@@ -1,9 +1,17 @@
 export const routesSnipets: any = {
+  index: `
+  import bodyParser from 'body-parser';
+  import { NodeServer } from 'lib-node-server';
+  const nodeServer = NodeServer.server();
+  // add new route;
+
+  // use new route;
+  `,
   body: `
 import { @{SMALL_PLEURAL_MODEL} } from '@{RELATIVE_URLS_DIR_CHANGE}/urls';
 import { NodeServer, IRouter } from 'lib-node-server';
-const @{SMALL_PLEURAL_MODEL}Router: IRouter = new NodeServer().getRouter();
-const controller = require("@{RELATIVE_CONTROLLER_DIR_CHANGE}/app/controller/@{CONTROLLER_DIR}/@{PLEURAL_MODEL}Controller");
+const @{SMALL_PLEURAL_MODEL}Router: IRouter = NodeServer.server().getRouter();
+const controller = require("@{RELATIVE_CONTROLLER_DIR_CHANGE}/controller/@{CONTROLLER_DIR}/@{PLEURAL_MODEL}Controller");
 @{ATTACH_ROUTES}
 export default @{SMALL_PLEURAL_MODEL}Router;
 `,

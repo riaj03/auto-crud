@@ -10,7 +10,7 @@ export class TypeScriptController {
     this.projectDbPath = projectDbPath;
   }
   private controllerFileDir(model: ModelConfig) {
-    let fileDir = `${this.projectDbPath}/../app/controller/`;
+    let fileDir = `${this.projectDbPath}/../controller/`;
     if ('controller_dir_name' in model && model.controller_dir_name.length > 0)
       fileDir += `${model.controller_dir_name}/`;
     return fileDir;
