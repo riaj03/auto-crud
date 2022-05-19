@@ -130,13 +130,8 @@ export class TypescriptServiceModel {
 
   public constructModelClass(projectDbPath: string) {
     const file = this.createModelClassFileContents(this.model);
-    // console.log("Model Class File Content: ");
-    // console.log(file);
-
     const modelClassFileName = plural(this.model.name).charAt(0).toLowerCase() + plural(this.model.name).substring(1);
     const fileDir = this.modelClassFileDir(projectDbPath, this.model);
-    // console.log(`File Dir: ${fileDir}`);
-
     writeCodeFile(fileDir, modelClassFileName, 'ts', file);
   }
 }

@@ -2,6 +2,7 @@ import { plural } from 'pluralize';
 import { fileRead, writeCodeFile } from '../../services/commonServices';
 import { ModelConfig } from '../../strategies/modelConfig.types';
 import { routesSnipets } from '../snipets/typeScriptSnipets/typescriptRoutesSnipets';
+import fs from 'fs';
 
 export class TypescriptRoutes {
   private model: ModelConfig;
@@ -140,9 +141,10 @@ export class TypescriptRoutes {
     }
     return methodName;
   }
-  private updateRouteUrls() {
+  private async updateRouteUrls() {
     const urlFile = `${this.projectDbPath}../routes/urls.ts`;
     let urlContents = fileRead(urlFile);
+
     const urlsSinpet = {
       bodyStart: `export const @{PLURAL_MODEL_LOWER} = {`,
       url: `@{METHOD}_@{MODEL_UPPER}: '@{URL}'`
@@ -150,6 +152,7 @@ export class TypescriptRoutes {
 
     let urls = urlsSinpet.bodyStart.replace('@{PLURAL_MODEL_LOWER}', plural(this.model.name.toLowerCase()));
 
+    // if (urls) {
     for (let index = 0; index < this.model.routes.length; index++) {
       let routeUrl = urlsSinpet.url.replace('@{METHOD}', this.getMethodName(this.model.routes[index].method));
       routeUrl = routeUrl.replace(
@@ -165,7 +168,9 @@ export class TypescriptRoutes {
 
     urlContents += urls;
     urlContents += `};`;
+
     writeCodeFile(`${this.projectDbPath}../routes/`, 'urls', 'ts', urlContents);
+    // console.log('===================================End');
   }
 
   private updateRouteIndex() {
@@ -174,16 +179,18 @@ export class TypescriptRoutes {
 
     const routeIndexFildeDir = this.routesIndexFileDir();
     let routeIndexContent = fileRead(`${routeIndexFildeDir}/index.ts`);
+
     routeIndexContent = routeIndexContent.replace(
       '// add new route',
       `import ${this.model.name.toLowerCase()}Router from '${routeDir}';` + '\n' + `// add new route`
     );
     routeIndexContent = routeIndexContent.replace(
       '// use new route',
-      `nodeServer.use(${this.model.name.toLowerCase()});` + '\n' + `// use new route`
+      `nodeServer.use(${this.model.name.toLowerCase()}Router);` + '\n' + `// use new route`
     );
     writeCodeFile(`${routeIndexFildeDir}/`, 'index', 'ts', routeIndexContent);
   }
+
   public constructRoutesFile() {
     const file = this.createRoutesFileContents(this.model);
     const routesFileName = plural(this.model.name).charAt(0).toLowerCase() + plural(this.model.name).substring(1);

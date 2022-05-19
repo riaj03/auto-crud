@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, writeFile } from 'fs';
+import { existsSync, mkdirSync, readFileSync, writeFile, writeFileSync } from 'fs';
 
 const isWin = process.platform === 'win32';
 export const lowerCaseFirstLetter = (str: string) => {
@@ -23,10 +23,7 @@ export const writeCodeFile = (directory: string, fileName: string, estension: 'j
   try {
     mkdirSyncRecursive(directory);
 
-    writeFile(directory + `${fileName}.${estension}`, content, function (err) {
-      if (err) console.log('Error: ', err);
-      else console.log(`${fileName} File constructed successfully!`);
-    });
+    writeFileSync(directory + `${fileName}.${estension}`, content);
   } catch (err) {
     console.error(err);
   }
