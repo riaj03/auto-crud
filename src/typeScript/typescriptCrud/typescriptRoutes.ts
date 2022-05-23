@@ -1,23 +1,31 @@
+import { exists, writeFileSync } from 'fs';
 import { plural } from 'pluralize';
 import { fileRead, writeCodeFile } from '../../services/commonServices';
 import { ModelConfig } from '../../strategies/modelConfig.types';
 import { routesSnipets } from '../snipets/typeScriptSnipets/typescriptRoutesSnipets';
-import fs from 'fs';
 
 export class TypescriptRoutes {
   private model: ModelConfig;
   private projectDbPath: string;
+  private modifyModelName: string;
+  private fileName: string;
+
   constructor(projectDbPath: string, model: ModelConfig) {
     this.model = model;
     this.projectDbPath = projectDbPath;
+
+    this.modifyModelName = plural(this.model.name.charAt(0).toLowerCase() + this.model.name.slice(1));
+    this.fileName = this.modifyModelName
+      .replace(/([A-Z])/g, '-$1')
+      .trim()
+      .toLowerCase();
   }
+
   private attachRoutesInFile(file: string, model: ModelConfig) {
     let routes = '';
 
     model.routes.forEach((obj) => {
       let route = routesSnipets.statements[obj.method];
-      // console.log(`Route for method: ${obj.method}`);
-      // console.log(route);
 
       switch (obj.method) {
         case 'getModels':
@@ -60,10 +68,20 @@ export class TypescriptRoutes {
     file = file.replace(/@{ATTACH_ROUTES}/g, routes);
     return file;
   }
+
   private routesFileDir() {
     let fileDir = `${this.projectDbPath}/../routes/api/`;
-    if ('routes_dir_name' in this.model && this.model.routes_dir_name.length > 0)
-      fileDir += `${this.model.routes_dir_name}/`;
+
+    const modifyModelName = plural(this.model.name.charAt(0).toLowerCase() + this.model.name.slice(1));
+    const fileName = modifyModelName
+      .replace(/([A-Z])/g, '-$1')
+      .trim()
+      .toLowerCase();
+
+    if ('routes_dir_name' in this.model && this.model.routes_dir_name.length > 0) {
+      fileDir += `${fileName}/`;
+    }
+
     return fileDir;
   }
 
@@ -150,9 +168,12 @@ export class TypescriptRoutes {
       url: `@{METHOD}_@{MODEL_UPPER}: '@{URL}'`
     };
 
-    let urls = urlsSinpet.bodyStart.replace('@{PLURAL_MODEL_LOWER}', plural(this.model.name.toLowerCase()));
+    // makes frist letter small
+    let urls = urlsSinpet.bodyStart.replace(
+      '@{PLURAL_MODEL_LOWER}',
+      plural(this.model.name.charAt(0).toLowerCase() + this.model.name.slice(1))
+    );
 
-    // if (urls) {
     for (let index = 0; index < this.model.routes.length; index++) {
       let routeUrl = urlsSinpet.url.replace('@{METHOD}', this.getMethodName(this.model.routes[index].method));
       routeUrl = routeUrl.replace(
@@ -168,32 +189,46 @@ export class TypescriptRoutes {
 
     urlContents += urls;
     urlContents += `};`;
-
     writeCodeFile(`${this.projectDbPath}../routes/`, 'urls', 'ts', urlContents);
-    // console.log('===================================End');
   }
 
   private updateRouteIndex() {
     // TODO: make dynamic dir
-    const routeDir = `./api/${plural(this.model.name.toLowerCase())}/${plural(this.model.name.toLowerCase())}`;
+    const routeDir = `./api/${plural(this.fileName)}/${plural(this.fileName)}`;
 
     const routeIndexFildeDir = this.routesIndexFileDir();
     let routeIndexContent = fileRead(`${routeIndexFildeDir}/index.ts`);
 
+    if (routeIndexContent.length === 0) {
+      routeIndexContent = routeIndexContent.replace(
+        '',
+        `import { NodeServer } from 'lib-node-server';
+const nodeServer = NodeServer.server(); 
+
+// add new route\n
+
+
+// use new route
+        `
+      );
+    }
+
+    // work before this line
     routeIndexContent = routeIndexContent.replace(
       '// add new route',
-      `import ${this.model.name.toLowerCase()}Router from '${routeDir}';` + '\n' + `// add new route`
+      `import ${this.modifyModelName}Router from '${routeDir}';` + '\n' + `// add new route`
     );
     routeIndexContent = routeIndexContent.replace(
       '// use new route',
-      `nodeServer.use(${this.model.name.toLowerCase()}Router);` + '\n' + `// use new route`
+      `nodeServer.use(${this.modifyModelName}Router);` + '\n' + `// use new route`
     );
     writeCodeFile(`${routeIndexFildeDir}/`, 'index', 'ts', routeIndexContent);
   }
 
   public constructRoutesFile() {
     const file = this.createRoutesFileContents(this.model);
-    const routesFileName = plural(this.model.name).charAt(0).toLowerCase() + plural(this.model.name).substring(1);
+    const routesFileName = plural(this.fileName);
+
     const fileDir = this.routesFileDir();
     writeCodeFile(fileDir, routesFileName, 'ts', file);
     this.updateRouteIndex();
