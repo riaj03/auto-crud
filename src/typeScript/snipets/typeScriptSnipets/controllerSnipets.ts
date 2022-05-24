@@ -1,3 +1,5 @@
+import { ErrorHttpResponse } from '../../../error/errorHttpResponse.service';
+
 export const controllerSnipets: any = {
   body: `
 import {@{PLEURAL_MODEL}} from '@{RELATIVE_MODEL_DIR_CHANGE}/model/@{MODEL_DIR}/@{SMALL_PLEURAL_MODEL}';
@@ -59,7 +61,7 @@ return (new @{PLEURAL_MODEL}()).create@{MODEL}(req)
   res.status(400).send({
       success: false,
       message: "@{MODEL} creation failed.",
-      errors: Array.isArray(errors) === true ? errors : [{msg: errors.message}]
+      errors: Array.isArray(errors) === true ? new ErrorHttpResponse() : [{msg: errors.message}]
   })
 })
 };`,
