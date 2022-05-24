@@ -40,5 +40,45 @@
 
   ```
 
+  Create a below folder structure in project root directory.
+
+- src
+
+  - packages
+
+    - `packageName`
+
+      - db
+      - queryParser
+
+        - queryParser.ts
+
+      - routes
+        1. index.ts
+        2. urls.ts
+
+- Now go to inside `db` folder from terminal and run below command.
+
+  - Run: `sequelize init`
+
+- Now go to inside `queryParser.ts` file and paste those below code.
+
+```
+'use strict';
+
+const db = require('../db/models');
+const queryParser = require('sequelize-query')(db);
+
+module.exports = queryParser;
+```
+
 - Generate rest apis
   - Run: `rest {CONFIG_FILE_PATH}`
+- Modify the `username , password` and `database` name inside `db/config/config.ts`
+- Build your project
+
+  - Run: `npm run build`
+
+- Copy all from `db/config/config.ts` and paste it inside `dist/packages/user/db` folder
+- Run your project
+  -Run: `npm run watch`

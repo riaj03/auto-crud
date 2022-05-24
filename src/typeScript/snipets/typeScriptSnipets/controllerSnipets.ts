@@ -3,6 +3,7 @@ import { ErrorHttpResponse } from '../../../error/errorHttpResponse.service';
 export const controllerSnipets: any = {
   body: `
 import {@{PLEURAL_MODEL}} from '@{RELATIVE_MODEL_DIR_CHANGE}/model/@{MODEL_DIR}/@{SMALL_PLEURAL_MODEL}';
+import { ErrorHttpResponse } from '../../../../private_modules/error/errorHttpResponse.service';
 `,
   functions: {
     methods: {
@@ -27,7 +28,7 @@ return (new @{PLEURAL_MODEL}()).get@{MODEL}(req)
   res.status(400).send({
       success: false,
       message: "@{MODEL} fetch failed.",
-      errors: Array.isArray(errors) === true ? errors : [{msg: errors.message}]
+      errors: new ErrorHttpResponse(errors).generate()
   })
 })
 };`,
@@ -44,7 +45,7 @@ return (new @{PLEURAL_MODEL}()).get@{PLEURAL_MODEL}(req)
   res.status(400).send({
       success: false,
       message: "@{PLEURAL_MODEL} fetch failed.",
-      errors: Array.isArray(errors) === true ? errors : [{msg: errors.message}]
+      errors: new ErrorHttpResponse(errors).generate()
   })
 })
 };`,
@@ -61,7 +62,7 @@ return (new @{PLEURAL_MODEL}()).create@{MODEL}(req)
   res.status(400).send({
       success: false,
       message: "@{MODEL} creation failed.",
-      errors: Array.isArray(errors) === true ? new ErrorHttpResponse() : [{msg: errors.message}]
+      errors: new ErrorHttpResponse(errors).generate()
   })
 })
 };`,
@@ -86,8 +87,7 @@ return (new @{PLEURAL_MODEL}()).update@{MODEL}(req)
   res.status(400).send({
       success: false,
       message: "@{MODEL} update failed.",
-      errors: Array.isArray(errors) === true ? errors : [{msg: errors.message}]
-  })
+      errors: new ErrorHttpResponse(errors).generate()  })
 })
 };`,
       patchModel: `export const patch@{MODEL} = (req: any, res: any) => {
@@ -111,7 +111,7 @@ return (new @{PLEURAL_MODEL}()).patch@{MODEL}(req)
   res.status(400).send({
       success: false,
       message: "@{MODEL} patch failed.",
-      errors: Array.isArray(errors) === true ? errors : [{msg: errors.message}]
+      errors: new ErrorHttpResponse(errors).generate()
   })
 })
 };`,
@@ -135,7 +135,7 @@ return (new @{PLEURAL_MODEL}()).delete@{MODEL}(req)
   res.status(400).send({
       success: false,
       message: "@{MODEL} delete failed.",
-      errors: Array.isArray(errors) === true ? errors : [{msg: errors.message}]
+      errors: new ErrorHttpResponse(errors).generate()
   })
 })
 };`
