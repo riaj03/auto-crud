@@ -73,12 +73,20 @@ module.exports = queryParser;
 ```
 
 - Generate rest apis
+
   - Run: `rest {CONFIG_FILE_PATH}`
+
 - Modify the `username , password` and `database` name inside `db/config/config.ts`
+
 - Build your project
 
   - Run: `npm run build`
 
+- Migrate your project
+
+  - Run: `npx sequelize-cli db:migrate`
+
 - Copy all from `db/config/config.ts` and paste it inside `dist/packages/user/db` folder
+
 - Run your project
   -Run: `npm run watch`
