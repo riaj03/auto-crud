@@ -1,5 +1,5 @@
 import { CRUDGeneratorStrategy } from '../../crud/CRUDGeneratorStrategy.interface';
-import { readFileSync, writeFile } from 'fs';
+import { readFileSync, writeFile, writeFileSync } from 'fs';
 import { ModelConfig } from '../../strategies/modelConfig.types';
 import { sequelizeDbModel } from '../snipets/typeScriptSnipets/sequelizeDbModelSnipets';
 import { plural } from 'pluralize';
@@ -132,10 +132,7 @@ export class TypescriptCrudStrategy implements CRUDGeneratorStrategy {
   private updateDbModel(dbModelContents: string, model: ModelConfig): any {
     dbModelContents = this.addModelAssociations(dbModelContents, model);
     dbModelContents = this.addModelCRUDFunctions(dbModelContents, model);
-    writeFile(`${this.porjectDBPath}/models/${model.name.toLowerCase()}.js`, dbModelContents, function (err) {
-      if (err) console.log('Error: ', err);
-      else console.log('SequelizeDBModel File updated successfully!');
-    });
+    writeFileSync(`${this.porjectDBPath}/models/${model.name.toLowerCase()}.js`, dbModelContents);
   }
 
   private makeServiceModel(model: ModelConfig): any {
