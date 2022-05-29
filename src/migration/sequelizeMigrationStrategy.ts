@@ -23,7 +23,7 @@ export class SequelizeMigrationStrategy implements SchemaMigartionStrategy {
       if (!modelsExist) {
         let modelContent = modelsSnipets.modelHeader.replace(/@{MODEL}/g, this.model.name);
         this.model.attributes.forEach((attr: any) => {
-          modelContent += `${attr.name}:${attr.type},`;
+          modelContent += `${attr.name}: DataTypes.${attr.type.toUpperCase()},`;
         });
         modelContent += modelsSnipets.modelMethods.replace(/@{MODEL}/g, this.model.name);
         writeFileSync(`${this.porjectDBPath}/models/${this.model.name.toLowerCase()}.js`, modelContent);
