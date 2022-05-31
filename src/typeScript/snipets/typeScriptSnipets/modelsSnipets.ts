@@ -4,9 +4,12 @@ export const modelsSnipets: any = {
     const { Model } = require('sequelize');
     module.exports = (sequelize, DataTypes) => {
     class @{MODEL} extends Model {
-        static associate(models) {}
-    }
-    @{MODEL}.init({
+        static associate(models) {
+  `,
+  assosiationEnd: `
+}
+}
+@{MODEL}.init({
   `,
   modelMethods: `
     },{
