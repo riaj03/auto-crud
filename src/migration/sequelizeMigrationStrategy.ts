@@ -20,31 +20,28 @@ export class SequelizeMigrationStrategy implements SchemaMigartionStrategy {
 
       const modelsExist = ifExists(this.porjectDBPath + `models/${this.model.name.toLocaleLowerCase()}.ts`);
       let modelContent = modelsSnipets.modelHeader.replace(/@{MODEL}/g, this.model.name);
-
-      // create models & migrations
       let migrationContent = migrationsSnipets.migrationsStart.replace(/@{MODEL}/g, this.model.name);
 
-      //assosiations
+      //assosiation
+      this.model.associations?.forEach((association: any) => {
+        modelContent += `${this.model.name}.${association.method}(models.${association.associated_model},{`;
+        association.attributes.forEach((attribute: any) => {
+          modelContent += `${attribute.name}:${attribute.value},`;
+        });
+        modelContent += `});`;
+      });
 
-      // Booking.hasMany(models.TreatmentFeedback, {
-      //   as: ASSOCIATION_ALIASES.TREATMENT_FEEDBACK.BOOKING_TO_TREATMENT_FEEDBACK,
-      //   foreignKey: 'bookingId',
-      //   sourceKey: 'id'
-      // });
+      modelContent += modelsSnipets.assosiationEnd.replace(/@{MODEL}/g, this.model.name);
 
-      // this.model.associations?.forEach((association: any) => {
-      //   let assosiation = `${this.model.name}.${association.method}(models.${association.associated_model},{as: ${association.as},})`;
-      //   console.log(association.method);
-      // });
-
+      // create models & migrations
       this.model.attributes.forEach((attr: any) => {
         migrationContent += `${attr.name}:{`;
-        attr.types.forEach((prpperty: any) => {
-          if (prpperty.name === 'type') {
-            modelContent += `${attr.name}: DataTypes.${prpperty.value.toUpperCase()},\n`;
-            migrationContent += `${prpperty.name}:Sequelize.${prpperty.value.toUpperCase()},\n`;
+        attr.types.forEach((property: any) => {
+          if (property.name === 'type') {
+            modelContent += `${attr.name}: DataTypes.${property.value.toUpperCase()},\n`;
+            migrationContent += `${property.name}:Sequelize.${property.value.toUpperCase()},\n`;
           } else {
-            migrationContent += `${prpperty.name}:${prpperty.value},\n`;
+            migrationContent += `${property.name}:${property.value},\n`;
           }
         });
         migrationContent += '},';
