@@ -187,9 +187,15 @@ export class TypescriptRoutes {
       urls += routeUrl;
     }
 
-    urlContents += urls;
-    urlContents += `};`;
-    writeCodeFile(`${this.projectDbPath}../routes/`, 'urls', 'ts', urlContents);
+    urls += `}`;
+
+    if (urlContents.indexOf(urls) < 0) {
+      urlContents += urls;
+      urlContents += `;`;
+      writeCodeFile(`${this.projectDbPath}../routes/`, 'urls', 'ts', urlContents);
+    } else {
+      console.log('Urls already exists');
+    }
   }
 
   private updateRouteIndex() {
@@ -212,17 +218,37 @@ const nodeServer = NodeServer.server();
         `
       );
     }
+    //check if router is exists or not
+    const checkImportExist = `import ${this.modifyModelName}Router from '${routeDir}'`;
+    const checkUseRouter = `nodeServer.use(${this.modifyModelName}Router)`;
 
-    // work before this line
-    routeIndexContent = routeIndexContent.replace(
+    const importRouteIndexContent = routeIndexContent.replace(
       '// add new route',
-      `import ${this.modifyModelName}Router from '${routeDir}';` + '\n' + `// add new route`
+      `${checkImportExist};` + '\n' + `// add new route`
     );
-    routeIndexContent = routeIndexContent.replace(
+
+    const useRouteIndexContent = routeIndexContent.replace(
       '// use new route',
-      `nodeServer.use(${this.modifyModelName}Router);` + '\n' + `// use new route`
+      `${checkUseRouter};` + '\n' + `// use new route`
     );
-    writeCodeFile(`${routeIndexFildeDir}/`, 'index', 'ts', routeIndexContent);
+
+    if (routeIndexContent.indexOf(checkImportExist) > 0 && routeIndexContent.indexOf(checkUseRouter) > 0) {
+      console.log('Your router is already declered');
+    } else if (routeIndexContent.indexOf(checkImportExist) > 0 && routeIndexContent.indexOf(checkUseRouter) < 1) {
+      writeCodeFile(`${routeIndexFildeDir}/`, 'index', 'ts', useRouteIndexContent);
+    } else if (routeIndexContent.indexOf(checkUseRouter) > 0 && routeIndexContent.indexOf(checkImportExist) < 1) {
+      writeCodeFile(`${routeIndexFildeDir}/`, 'index', 'ts', importRouteIndexContent);
+    } else {
+      routeIndexContent = routeIndexContent.replace(
+        '// use new route',
+        `nodeServer.use(${this.modifyModelName}Router);` + '\n' + `// use new route`
+      );
+      routeIndexContent = routeIndexContent.replace(
+        '// add new route',
+        `${checkImportExist};` + '\n' + `// add new route`
+      );
+      writeCodeFile(`${routeIndexFildeDir}/`, 'index', 'ts', routeIndexContent);
+    }
   }
 
   public constructRoutesFile() {
