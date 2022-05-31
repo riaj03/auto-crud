@@ -174,22 +174,21 @@ export class TypescriptRoutes {
       plural(this.model.name.charAt(0).toLowerCase() + this.model.name.slice(1))
     );
 
-    for (let index = 0; index < this.model.routes.length; index++) {
-      let routeUrl = urlsSinpet.url.replace('@{METHOD}', this.getMethodName(this.model.routes[index].method));
-      routeUrl = routeUrl.replace(
-        '@{MODEL_UPPER}',
-        this.model.routes[index].method === 'getModels'
-          ? plural(this.model.name.toUpperCase())
-          : this.model.name.toUpperCase()
-      );
-      routeUrl = routeUrl.replace('@{URL}', `${this.model.routes[index].url}`);
-      routeUrl += ',';
-      urls += routeUrl;
-    }
-
-    urls += `}`;
-
     if (urlContents.indexOf(urls) < 0) {
+      for (let index = 0; index < this.model.routes.length; index++) {
+        let routeUrl = urlsSinpet.url.replace('@{METHOD}', this.getMethodName(this.model.routes[index].method));
+        routeUrl = routeUrl.replace(
+          '@{MODEL_UPPER}',
+          this.model.routes[index].method === 'getModels'
+            ? plural(this.model.name.toUpperCase())
+            : this.model.name.toUpperCase()
+        );
+        routeUrl = routeUrl.replace('@{URL}', `${this.model.routes[index].url}`);
+        routeUrl += ',';
+        urls += routeUrl;
+      }
+
+      urls += `}`;
       urlContents += urls;
       urlContents += `;`;
       writeCodeFile(`${this.projectDbPath}../routes/`, 'urls', 'ts', urlContents);
@@ -222,21 +221,19 @@ const nodeServer = NodeServer.server();
     const checkImportExist = `import ${this.modifyModelName}Router from '${routeDir}'`;
     const checkUseRouter = `nodeServer.use(${this.modifyModelName}Router)`;
 
-    const importRouteIndexContent = routeIndexContent.replace(
-      '// add new route',
-      `${checkImportExist};` + '\n' + `// add new route`
-    );
-
-    const useRouteIndexContent = routeIndexContent.replace(
-      '// use new route',
-      `${checkUseRouter};` + '\n' + `// use new route`
-    );
-
     if (routeIndexContent.indexOf(checkImportExist) > 0 && routeIndexContent.indexOf(checkUseRouter) > 0) {
       console.log('Your router is already declered');
     } else if (routeIndexContent.indexOf(checkImportExist) > 0 && routeIndexContent.indexOf(checkUseRouter) < 1) {
+      const useRouteIndexContent = routeIndexContent.replace(
+        '// use new route',
+        `${checkUseRouter};` + '\n' + `// use new route`
+      );
       writeCodeFile(`${routeIndexFildeDir}/`, 'index', 'ts', useRouteIndexContent);
     } else if (routeIndexContent.indexOf(checkUseRouter) > 0 && routeIndexContent.indexOf(checkImportExist) < 1) {
+      const importRouteIndexContent = routeIndexContent.replace(
+        '// add new route',
+        `${checkImportExist};` + '\n' + `// add new route`
+      );
       writeCodeFile(`${routeIndexFildeDir}/`, 'index', 'ts', importRouteIndexContent);
     } else {
       routeIndexContent = routeIndexContent.replace(
