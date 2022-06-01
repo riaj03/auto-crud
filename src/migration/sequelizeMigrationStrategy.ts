@@ -5,6 +5,7 @@ import { ifExists } from '../services/commonServices';
 import { writeFileSync } from 'fs';
 import { modelsSnipets } from '../typeScript/snipets/typeScriptSnipets/modelsSnipets';
 import { migrationsSnipets } from '../typeScript/snipets/typeScriptSnipets/migrationsSnipets';
+import { ASSOSIATION_KEYS, DATA_TYPES } from '../types/dataTypes';
 
 export class SequelizeMigrationStrategy implements SchemaMigartionStrategy {
   porjectDBPath!: string;
@@ -22,11 +23,14 @@ export class SequelizeMigrationStrategy implements SchemaMigartionStrategy {
       let modelContent = modelsSnipets.modelHeader.replace(/@{MODEL}/g, this.model.name);
       let migrationContent = migrationsSnipets.migrationsStart.replace(/@{MODEL}/g, this.model.name);
 
-      //assosiation
+      //TODO: assosiation
       this.model.associations?.forEach((association: any) => {
         modelContent += `${this.model.name}.${association.method}(models.${association.associated_model},{`;
         association.attributes.forEach((attribute: any) => {
-          modelContent += `${attribute.name}:${attribute.value},`;
+          modelContent += `${attribute.name}:"${attribute.value}",`;
+
+          // if (ASSOSIATION_KEYS.includes(attribute.name)) modelContent += `${attribute.name}:"${attribute.value}",`;
+          // else console.log(`${this.model.name}s assosiation keys are wrong`);
         });
         modelContent += `});`;
       });
@@ -38,6 +42,8 @@ export class SequelizeMigrationStrategy implements SchemaMigartionStrategy {
         migrationContent += `${attr.name}:{`;
         attr.types.forEach((property: any) => {
           if (property.name === 'type') {
+            if (!DATA_TYPES.includes(property.value)) property.value = 'STRING';
+
             modelContent += `${attr.name}: DataTypes.${property.value.toUpperCase()},\n`;
             migrationContent += `${property.name}:Sequelize.${property.value.toUpperCase()},\n`;
           } else {

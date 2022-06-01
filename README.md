@@ -10,33 +10,115 @@
 
   ```
   {
-  "projectDbPath": "{DB_PATH_OF_PROJECT}",
-  "models": [
-    {
-      "name": "Client",
-      "attributes": [
-        { "name": "firstName", "type": "string" },
-        { "name": "lastName", "type": "string" },
-        { "name": "firstNameFurigana", "type": "string" },
-        { "name": "lastNameFurigana", "type": "string" },
-        { "name": "dob", "type": "date" },
-        { "name": "email", "type": "string" },
-        { "name": "isMember", "type": "boolean" }
-      ],
-      "associations": [],
-      "routes": [
-        { "url": "/api/clients", "method": "createModel" },
-        { "url": "/api/clients/:id", "method": "updateModel" },
-        { "url": "/api/clients/:id", "method": "patchModel" },
-        { "url": "/api/clients/", "method": "getModels" },
-        { "url": "/api/clients/:id", "method": "getModel" }
-      ],
-      "controller_dir_name": "client",
-      "model_dir_name": "clients",
-      "routes_dir_name": "clients"
-    }
-  ]
+    "projectDbPath": "/home/zahirul/groots/waris-backend/src/packages/user/db/",
+    "models": [
+        {
+            "name": "Message",
+            "attributes": [
+                {
+                    "name": "tag",
+                    "types": [
+                        {
+                            "name": "type",
+                            "value": "noentry"
+                        },
+                        {
+                            "name": "allowNull",
+                            "value": false
+                        },
+                        {
+                            "name": "defaultValue",
+                            "value": true
+                        },
+                        {
+                            "name": "maxLength",
+                            "value": 100
+                        }
+                    ]
+                },
+                {
+                    "name": "fristName",
+                    "types": [
+                        {
+                            "name": "type",
+                            "value": "string"
+                        },
+                        {
+                            "name": "allowNull",
+                            "value": false
+                        },
+                        {
+                            "name": "defaultValue",
+                            "value": true
+                        },
+                        {
+                            "name": "maxLength",
+                            "value": 100
+                        }
+                    ]
+                }
+            ],
+            "associations": [
+                {
+                    "attributes": [
+                        {
+                            "name": "as",
+                            "value": "type"
+                        },
+                        {
+                            "name": "referenceKey",
+                            "value": "id"
+                        },
+                        {
+                            "name": "key",
+                            "value": "foreignKey"
+                        },
+                        {
+                            "name": "onUpdate",
+                            "value": "true"
+                        },
+                        {
+                            "name": "onDelete",
+                            "value": "true"
+                        }
+                    ],
+                    "method": "belongsTo",
+                    "associated_model": "Type"
+                }
+            ],
+            "routes": [
+                {
+                    "url": "/api/messages",
+                    "method": "createModel"
+                },
+                {
+                    "url": "/api/messages/:id",
+                    "method": "updateModel"
+                },
+                {
+                    "url": "/api/messages/:id",
+                    "method": "patchModel"
+                },
+                {
+                    "url": "/api/messages",
+                    "method": "getModels"
+                },
+                {
+                    "url": "/api/messages/:id",
+                    "method": "getModel"
+                },
+                {
+                    "url": "/api/messages/:id",
+                    "method": "deleteModel"
+                }
+            ],
+            "controller_dir_name": "group",
+            "model_dir_name": "messages",
+            "routes_dir_name": "messages"
+        }
+    ]
   }
+
 
   ```
 
@@ -56,10 +138,6 @@
       - routes
         1. index.ts
         2. urls.ts
-
-- Now go to inside `db` folder from terminal and run below command.
-
-  - Run: `sequelize init`
 
 - Now go to inside `queryParser.ts` file and paste those below code.
 
