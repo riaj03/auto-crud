@@ -1,6 +1,6 @@
-import { exists, writeFileSync } from 'fs';
+import { exists, existsSync, writeFileSync } from 'fs';
 import { plural } from 'pluralize';
-import { fileRead, writeCodeFile } from '../../services/commonServices';
+import { fileRead, ifExists, writeCodeFile } from '../../services/commonServices';
 import { ModelConfig } from '../../strategies/modelConfig.types';
 import { routesSnipets } from '../snipets/typeScriptSnipets/typescriptRoutesSnipets';
 
@@ -191,7 +191,15 @@ export class TypescriptRoutes {
       urls += `}`;
       urlContents += urls;
       urlContents += `;`;
-      writeCodeFile(`${this.projectDbPath}../routes/`, 'urls', 'ts', urlContents);
+      const existUrlsFile = existsSync(`/home/zahirul/groots/waris-backend/src/packages/user/routes/urls.ts`);
+
+      if (existUrlsFile) {
+        console.log('Create file with content');
+        writeFileSync(`${this.projectDbPath}../routes/urls.ts`, urlContents);
+      } else {
+        console.log('Create only file');
+        writeCodeFile(`${this.projectDbPath}../routes/`, 'urls', 'ts', urlContents);
+      }
     } else {
       console.log('Urls already exists');
     }

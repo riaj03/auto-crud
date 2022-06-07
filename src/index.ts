@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+import { createApiDoc } from './api-doc';
 import { Rest } from './Rest';
 const getFileNameArguments = () => {
   return process.argv.slice(2);
@@ -11,6 +11,7 @@ const execute = () => {
       const rest = new Rest('sql', dataSource.projectDbPath, 'typescript');
       rest.generate(dataSource);
     });
+    createApiDoc(files);
   } else
     throw new Error(
       'No source files specified. please provide one or more .txt source files seperated by empty space.'

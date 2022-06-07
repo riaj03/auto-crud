@@ -10,7 +10,7 @@ import { ASSOSIATION_KEYS, DATA_TYPES } from '../types/dataTypes';
 export class SequelizeMigrationStrategy implements SchemaMigartionStrategy {
   porjectDBPath!: string;
   private model!: ModelConfig;
-  private runMigration() {
+  private async runMigration() {
     try {
       //sequelize initialize
       const sequlizeConfigExist = ifExists(this.porjectDBPath + 'config/config.json');
@@ -24,31 +24,35 @@ export class SequelizeMigrationStrategy implements SchemaMigartionStrategy {
       let migrationContent = migrationsSnipets.migrationsStart.replace(/@{MODEL}/g, this.model.name);
 
       //TODO: assosiation
-      this.model.associations?.forEach((association: any) => {
-        modelContent += `${this.model.name}.${association.method}(models.${association.associated_model},{`;
-        association.attributes.forEach((attribute: any) => {
-          modelContent += `${attribute.name}:"${attribute.value}",`;
+      // let dbInstance = require('/home/zahirul/groots/waris-backend/src/packages/user/db/models/');
 
-          // if (ASSOSIATION_KEYS.includes(attribute.name)) modelContent += `${attribute.name}:"${attribute.value}",`;
-          // else console.log(`${this.model.name}s assosiation keys are wrong`);
-        });
-        modelContent += `});`;
+      this.model.associations?.forEach((association: any) => {
+        const exists = ifExists(
+          `/home/zahirul/groots/waris-backend/src/packages/user/db/models/${association.associated_model.toLocaleLowerCase()}.ts`
+        );
+
+        if (association.associated_model && exists) {
+          modelContent += `${this.model.name}.${association.method}(models.${association.associated_model},{`;
+          association.attributes.forEach((attribute: any) => {
+            modelContent += `${attribute.name}:"${attribute.value}",`;
+          });
+          modelContent += `});`;
+        }
       });
 
       modelContent += modelsSnipets.assosiationEnd.replace(/@{MODEL}/g, this.model.name);
 
       // create models & migrations
       this.model.attributes.forEach((attr: any) => {
-        migrationContent += `${attr.name}:{`;
-        attr.types.forEach((property: any) => {
-          if (property.name === 'type') {
-            if (!DATA_TYPES.includes(property.value)) property.value = 'STRING';
+        if (!DATA_TYPES.includes(attr.type)) attr.type = 'STRING';
+        modelContent += `${attr.name}: DataTypes.${attr.type.toUpperCase()},\n`;
 
-            modelContent += `${attr.name}: DataTypes.${property.value.toUpperCase()},\n`;
-            migrationContent += `${property.name}:Sequelize.${property.value.toUpperCase()},\n`;
-          } else {
-            migrationContent += `${property.name}:${property.value},\n`;
-          }
+        migrationContent += `${attr.name}:{`;
+        migrationContent += `type:Sequelize.${attr.type.toUpperCase()},\n`;
+        migrationContent += `isRequired:${attr.isRequired},\n`;
+
+        attr.properties?.forEach((property: any) => {
+          migrationContent += `${property.name}:${property.value},\n`;
         });
         migrationContent += '},';
       });

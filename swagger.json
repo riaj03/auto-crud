@@ -1,0 +1,34 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Waris APIs",
+    "version": "1.0.0",
+    "title": "Waris",
+    "contact": { "email": "info@groots.co.jp" }
+  },
+  "host": "localhost:8000",
+  "basePath": "/api",
+  "schemes": ["http"],
+  "paths": {
+    "/api/messages": {
+      "post": {
+        "responses": {},
+        "parameters": [{ "in": "body", "name": "body", "schema": { "$ref": "#/definitions/Message" } }]
+      },
+      "get": { "responses": {} }
+    },
+    "/api/messages/:id": {
+      "put": {
+        "responses": {},
+        "parameters": [{ "in": "body", "name": "body", "schema": { "$ref": "#/definitions/Message" } }]
+      },
+      "patch": {
+        "responses": {},
+        "parameters": [{ "in": "body", "name": "body", "schema": { "$ref": "#/definitions/Message" } }]
+      },
+      "get": { "responses": {} },
+      "delete": { "responses": {} }
+    }
+  },
+  "definitions": { "Message": { "type": "object", "properties": { "tag": {}, "fristName": {} } } }
+}
