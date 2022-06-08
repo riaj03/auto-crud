@@ -28,7 +28,29 @@
       },
       "get": { "responses": {} },
       "delete": { "responses": {} }
+    },
+    "/api/ms": {
+      "post": {
+        "responses": {},
+        "parameters": [{ "in": "body", "name": "body", "schema": { "$ref": "#/definitions/M" } }]
+      },
+      "get": { "responses": {} }
+    },
+    "/api/ms/:id": {
+      "put": {
+        "responses": {},
+        "parameters": [{ "in": "body", "name": "body", "schema": { "$ref": "#/definitions/M" } }]
+      },
+      "patch": {
+        "responses": {},
+        "parameters": [{ "in": "body", "name": "body", "schema": { "$ref": "#/definitions/M" } }]
+      },
+      "get": { "responses": {} },
+      "delete": { "responses": {} }
     }
   },
-  "definitions": { "Message": { "type": "object", "properties": { "tag": {}, "fristName": {} } } }
+  "definitions": {
+    "Message": { "type": "object", "properties": { "tag": {}, "fristName": {} } },
+    "M": { "type": "object", "properties": { "tag": {}, "fristName": {} } }
+  }
 }
