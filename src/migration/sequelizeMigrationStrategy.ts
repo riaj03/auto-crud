@@ -27,17 +27,19 @@ export class SequelizeMigrationStrategy implements SchemaMigartionStrategy {
       // let dbInstance = require('/home/zahirul/groots/waris-backend/src/packages/user/db/models/');
 
       this.model.associations?.forEach((association: any) => {
-        const exists = ifExists(
-          `/home/zahirul/groots/waris-backend/src/packages/user/db/models/${association.associated_model.toLocaleLowerCase()}.ts`
-        );
+        // const exists = ifExists(
+        //   `/home/zahirul/groots/waris-backend/src/packages/user/db/models/${association.associated_model.toLocaleLowerCase()}.ts`
+        // );
 
-        if (association.associated_model && exists) {
-          modelContent += `${this.model.name}.${association.method}(models.${association.associated_model},{`;
-          association.attributes.forEach((attribute: any) => {
-            modelContent += `${attribute.name}:"${attribute.value}",`;
-          });
-          modelContent += `});`;
-        }
+        // if (association.associated_model && exists) {
+        //   console.log(modelContent);
+        modelContent += `${this.model.name}.${association.method}(models.${association.associated_model},{`;
+        association.attributes.forEach((attribute: any) => {
+          modelContent += `${attribute.name}:"${attribute.value}",`;
+        });
+        modelContent += `});`;
+        // console.log(modelContent);
+        // }
       });
 
       modelContent += modelsSnipets.assosiationEnd.replace(/@{MODEL}/g, this.model.name);
