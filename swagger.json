@@ -10,47 +10,92 @@
   "basePath": "/api",
   "schemes": ["http"],
   "paths": {
-    "/api/messages": {
+    "/api/users": {
       "post": {
         "responses": {},
-        "parameters": [{ "in": "body", "name": "body", "schema": { "$ref": "#/definitions/Message" } }]
+        "parameters": [{ "in": "body", "name": "body", "schema": { "$ref": "#/definitions/User" } }]
       },
       "get": { "responses": {} }
     },
-    "/api/messages/:id": {
+    "/api/users/{id}": {
       "put": {
         "responses": {},
-        "parameters": [{ "in": "body", "name": "body", "schema": { "$ref": "#/definitions/Message" } }]
+        "parameters": [
+          { "in": "path", "name": "params" },
+          { "in": "body", "name": "body", "schema": { "$ref": "#/definitions/User" } }
+        ]
       },
       "patch": {
         "responses": {},
-        "parameters": [{ "in": "body", "name": "body", "schema": { "$ref": "#/definitions/Message" } }]
+        "parameters": [
+          { "in": "path", "name": "params" },
+          { "in": "body", "name": "body", "schema": { "$ref": "#/definitions/User" } }
+        ]
       },
-      "get": { "responses": {} },
-      "delete": { "responses": {} }
+      "get": { "responses": {}, "parameters": [{ "in": "path", "name": "params" }] },
+      "delete": { "responses": {}, "parameters": [{ "in": "path", "name": "params" }] }
     },
-    "/api/ms": {
+    "/api/profiles": {
       "post": {
         "responses": {},
-        "parameters": [{ "in": "body", "name": "body", "schema": { "$ref": "#/definitions/M" } }]
+        "parameters": [{ "in": "body", "name": "body", "schema": { "$ref": "#/definitions/Profile" } }]
       },
       "get": { "responses": {} }
     },
-    "/api/ms/:id": {
+    "/api/profiles/{id}": {
       "put": {
         "responses": {},
-        "parameters": [{ "in": "body", "name": "body", "schema": { "$ref": "#/definitions/M" } }]
+        "parameters": [
+          { "in": "path", "name": "params" },
+          { "in": "body", "name": "body", "schema": { "$ref": "#/definitions/Profile" } }
+        ]
       },
       "patch": {
         "responses": {},
-        "parameters": [{ "in": "body", "name": "body", "schema": { "$ref": "#/definitions/M" } }]
+        "parameters": [
+          { "in": "path", "name": "params" },
+          { "in": "body", "name": "body", "schema": { "$ref": "#/definitions/Profile" } }
+        ]
       },
-      "get": { "responses": {} },
-      "delete": { "responses": {} }
+      "get": { "responses": {}, "parameters": [{ "in": "path", "name": "params" }] },
+      "delete": { "responses": {}, "parameters": [{ "in": "path", "name": "params" }] }
+    }
+  },
+  "securityDefinitions": {
+    "petstore_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "http://petstore.swagger.io/oauth/dialog",
+      "flow": "implicit",
+      "scopes": {
+        "write:pets": "modify pets in your account",
+        "read:pets": "read your pets"
+      }
+    },
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
     }
   },
   "definitions": {
-    "Message": { "type": "object", "properties": { "tag": {}, "fristName": {} } },
-    "M": { "type": "object", "properties": { "tag": {}, "fristName": {} } }
+    "User": {
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "registrationType": { "type": "string" },
+        "isAgreedTerms": { "type": "string" },
+        "isAgreedPDSTerms": { "type": "boolean" }
+      }
+    },
+    "Profile": {
+      "type": "object",
+      "properties": {
+        "familyName": { "type": "string" },
+        "name": { "type": "string" },
+        "surname": { "type": "string" },
+        "middleName": { "type": "boolean" },
+        "userId": { "type": "integer" }
+      }
+    }
   }
 }
