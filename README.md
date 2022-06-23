@@ -4,8 +4,13 @@
 
 - Install dependencies:
   - Run: `npm install`
+
+- Build project
+  - `npm run build`
+  
 - Install this project globally
   - Run : `npm install -g .`
+
 - Create a json file with configs like bellow
 
   ```
